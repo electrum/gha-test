@@ -1,0 +1,17 @@
+name: test
+
+on: push
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - run: hostname -i
+      - run: docker run centos bash -c 'hostname -i'
+      - run: |
+          CONTAINER=$(docker run -d -p 8080:80 nginx)
+          echo $CONTAINER
+          IP=$(docker exec $CONTAINER hostname -i)
+          echo $IP
+          curl -sS -v -o/dev/null http://127.0.0.1:8080/
+          curl -sS -v -o/dev/null http://$IP:8080/
